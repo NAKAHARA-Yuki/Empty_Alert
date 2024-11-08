@@ -21,7 +21,7 @@ services:
       FLASK_ENV: development
       DATABASE_URL: mysql://root:password@mysql:3306/flask_db
     ports:
-      - "5000:5000"
+      - "5000"
   nginx:
     build: ./nginx
     restart: always
