@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"  # データベースのパスワード
+      MYSQL_DATABASE: "flask_db"  # データベース名
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  flask:
+    build: ./flask-app
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development
+      DATABASE_URL: mysql://root:password@mysql:3306/flask_db
+    ports:
+      - "5000:5000"
+  nginx:
+    build: ./nginx
+    restart: always
+    depends_on:
+      - flask
+    ports:
+      - "80:80"
+  vue:
+    build: ./vue-app
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
